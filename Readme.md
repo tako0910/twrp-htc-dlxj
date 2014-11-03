@@ -1,6 +1,6 @@
-**TWRP - HTC Droid DNA**
+**TWRP - HTC J butterfly**
 
-This is a recovery-only device tree for the HTC Droid DNA (dlxj).
+This is a recovery-only device tree for the HTC J butterfly (dlxj).
 
 **Quick build instructions:**
 

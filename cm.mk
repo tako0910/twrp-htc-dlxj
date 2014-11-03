@@ -11,7 +11,7 @@ $(call inherit-product, device/htc/dlxj/device.mk)
 PRODUCT_DEVICE := dlxj
 PRODUCT_NAME := cm_dlxj
 PRODUCT_BRAND := htc
-PRODUCT_MODEL := Droid DNA
+PRODUCT_MODEL := J butterfly
 PRODUCT_MANUFACTURER := HTC
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
