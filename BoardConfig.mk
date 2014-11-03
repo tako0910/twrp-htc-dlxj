@@ -22,10 +22,10 @@
 USE_CAMERA_STUB := true
 
 # inherit from the proprietary version
--include vendor/htc/dlx/BoardConfigVendor.mk
+-include vendor/htc/dlxj/BoardConfigVendor.mk
 
 # Bootloader
-TARGET_BOOTLOADER_BOARD_NAME := dlx
+TARGET_BOOTLOADER_BOARD_NAME := dlxj
 TARGET_NO_BOOTLOADER := true
 
 # Platform
@@ -43,9 +43,9 @@ TARGET_CPU_VARIANT := krait
 #Kernel
 BOARD_KERNEL_BASE := 0x80600000
 BOARD_KERNEL_PAGESIZE := 2048
-BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.hardware=dlx user_debug=0 androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.hardware=dlxj user_debug=0 androidboot.selinux=permissive
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01800000
-TARGET_KERNEL_CONFIG := cyanogenmod_dlx_defconfig
+TARGET_KERNEL_CONFIG := cyanogenmod_dlxj_defconfig
 TARGET_KERNEL_SOURCE := kernel/htc/m7
 
 # QCOM hardware
@@ -64,7 +64,7 @@ USE_OPENGL_RENDERER := true
 TARGET_DISPLAY_USE_RETIRE_FENCE := true
 TARGET_USES_C2D_COMPOSITION := true
 TARGET_USES_ION := true
-BOARD_EGL_CFG := device/htc/dlx/configs/egl.cfg
+BOARD_EGL_CFG := device/htc/dlxj/configs/egl.cfg
 
 # Power
 TARGET_POWERHAL_VARIANT := cm
@@ -86,7 +86,7 @@ TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/msm_hsusb/gadget/lun%d/
 BOARD_CHARGING_MODE_BOOTING_LPM := /sys/htc_lpm/lpm_mode
 
 # SELinux
-BOARD_SEPOLICY_DIRS += device/htc/dlx/sepolicy
+BOARD_SEPOLICY_DIRS += device/htc/dlxj/sepolicy
 
 BOARD_SEPOLICY_UNION += \
     app.te \
