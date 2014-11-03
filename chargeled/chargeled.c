@@ -31,11 +31,7 @@
 #define POWER_SUPPLY_SUBSYSTEM "SUBSYSTEM=power_supply"
 
 #define BATTERY_STATUS_FILE "/sys/class/power_supply/battery/status"
-#define AMBER_LED "/sys/class/leds/amber/brightness"
-#define GREEN_LED "/sys/class/leds/green/brightness"
-
-#define LED_OFF "0"
-#define LED_ON "1"
+#define JPN_LED "/sys/class/leds/indicator/ModeRGB"
 
 #define STR_BUF_SIZE 128
 #define UEVENT_BUF_SIZE 64*1024
@@ -62,6 +58,28 @@ struct sysfs_string_enum_map {
     { "Full", BATTERY_STATUS_FULL },
     { NULL, 0 },
 };
+
+static int write_char(const char* path, char* value) {
+  int fd;
+  int bytes, written;
+  char buffer[20];
+  static int already_warned = 0;
+
+  fd = open(path, O_RDWR);
+  if (fd < 0) {
+    if (already_warned == 0) {
+      KLOG_ERROR(LOG_TAG, "%s: write_char failed to open %s, %s\n", __func__, path, value);
+      already_warned = 1;
+    }
+    return -errno;
+  }
+
+  bytes = snprintf(buffer, sizeof(buffer), "%s\n", value);
+  written = write(fd, buffer, bytes);
+  close(fd);
+
+  return written == -1 ? -errno : 0;
+}
 
 static int map_sysfs_string(const char* str) {
     int i;
@@ -114,43 +132,22 @@ static int get_charging_status() {
     return ret;
 }
 
-static void update_led(int charge_status) {
-    FILE *aled, *gled;
-    aled = fopen(AMBER_LED, "w");
-    if (!aled) {
-        KLOG_ERROR(LOG_TAG, "%s: could not open amber LED: %s\n",
-            __func__, AMBER_LED);
-        return;
-    } else {
-        gled = fopen(GREEN_LED, "w");
-        if (!gled) {
-            fclose(aled);
-            KLOG_ERROR(LOG_TAG, "%s: could not open green LED: %s\n",
-                __func__, GREEN_LED);
-            return;
-        }
-    }
-
+static void update_led_jpn(int charge_status) {
     KLOG_INFO(LOG_TAG, "%s: setting charging status '%d'\n",
             __func__, charge_status);
 
     switch (charge_status) {
         case BATTERY_STATUS_CHARGING:
-            fputs(LED_ON, aled);
-            fputs(LED_OFF, gled);
+            write_char(JPN_LED, "1ff0000");
             break;
         case BATTERY_STATUS_FULL:
-            fputs(LED_OFF, aled);
-            fputs(LED_ON, gled);
+            write_char(JPN_LED, "100ff00");
             break;
         default:
-            fputs(LED_OFF, aled);
-            fputs(LED_OFF, gled);
+            write_char(JPN_LED, "0");
             break;
     }
 
-    fclose(aled);
-    fclose(gled);
 }
 
 static void chargeled_update() {
@@ -162,7 +159,7 @@ static void chargeled_update() {
         return;
 
     last_charge_status = charge_status;
-    update_led(charge_status);
+    update_led_jpn(charge_status);
 }
 
 static int uevent_init() {
